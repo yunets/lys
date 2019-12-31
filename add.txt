@@ -3,3 +3,20 @@ fsfsfs
 branch
 sdfsfsd
 11111111111111111
+
+
+
+
+
+
+
+dim_xflx
+
+
+search * from ods_yktxfmx map t1 |search cast(t2.cflxm as string) as cflxm,xflxmc  from dim_xflx map t2 | search * from t1 join t2 on t1.xflx=cflxm
+
+
+search cast(cflxm as string) as cflxm  from dim_xflx 
+
+
+search * from ods_yktxfmx map t1 |search cast(cflxm as string) as cflxm,xflxmc  from dim_xflx map t2 | search * from t1 join t2 on t1.xflx=t2.cflxm
