@@ -1,0 +1,36 @@
+springboot实现pdf文件的预览
+
+
+### 1.后台的代码修改
+```
+    @ApiOperation("预览pdf")
+    @GetMapping("/getPDFById")
+    public ResponseEntity getPDFById(@RequestParam String  id)throws Exception{
+        // 根据id取出需要读取的pdf文件。
+        File downloadFile=XXXX.xxx(id);
+        byte[] output = new byte[0];
+        try {
+            output = FileUtils.readFileToByteArray(downloadFile);
+        } catch (IOException e) {
+            GlobalException.throwException("读取文件失败！");
+        }
+        byte[] output=jobReport.getFileContent();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("charset", "utf-8");
+        responseHeaders.setContentType(MediaType.APPLICATION_PDF);
+        responseHeaders.setContentLength(output.length);
+       //下载文件
+       // responseHeaders.set("Content-disposition", "attachment; filename=" + URLEncoder.encode(bynd+".pdf", "UTF-8"));
+        return new ResponseEntity<>(output, responseHeaders, HttpStatus.OK);
+    }
+```
+### 2.前端代码
+
+```
+
+http://localhost:8000/api/lys/getPDFById?id=1
+也可根据需要嵌入在iframe中
+              <iframe span={24} title="pdf预览" src={iframeSrc}  id="report" style={{width:'100%',height:'900px'}}></iframe>
+
+```

@@ -1,0 +1,57 @@
+
+# 查询oracle的表结构信息
+
+### 1.查询表的备注信息
+```
+
+select t.*  from all_tab_comments t 
+where t.TABLE_NAME like '%表名%'
+and t.OWNER like '%数据库%'
+
+
+```
+
+
+
+
+
+
+### 2.查询列备注信息
+```
+
+SELECT
+    t.OWNER,t.TABLE_NAME,t.COLUMN_NAME,t.COMMENTS
+FROM
+    ALL_COL_COMMENTS t
+WHERE
+    TABLE_NAME like '%表名%'
+
+
+
+```
+
+### 3.列字段的相关信息
+
+```
+select t.OWNER,t.TABLE_NAME,t.COLUMN_NAME,t.DATA_TYPE,t.DATA_LENGTH, t.NULLABLE,t.COLUMN_ID
+  from all_tab_columns t
+ where table_name like '%表名%'
+```
+
+
+### 4.合并查询表结构
+
+```
+select 
+t.COLUMN_NAME,t.DATA_TYPE,t.DATA_LENGTH, t.NULLABLE,
+tc.COMMENTS,t.COLUMN_ID,t.OWNER,t.TABLE_NAME
+  from all_tab_columns t, ALL_COL_COMMENTS tc
+ where t.table_name = 'SHXX'
+ and t.OWNER=tc.OWNER
+ and t.TABLE_NAME=tc.TABLE_NAME
+ and t.COLUMN_NAME=tc.COLUMN_NAME
+ order by t.COLUMN_ID asc
+```
+
+
+

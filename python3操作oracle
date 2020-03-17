@@ -1,0 +1,6 @@
+### python3连接oracle
+
+### 1.安装依赖包
+```
+pip install cx_Oracle 
+```

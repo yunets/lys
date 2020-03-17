@@ -1,0 +1,73 @@
+springboot实现文件的下载
+
+
+### 1.后台的代码修改
+```
+    @ApiOperation(value = "下载文件")
+    @GetMapping("/template/download")
+    public ResponseEntity<byte[]> downloadTemplateFile(@RequestParam("id") String id) throws FileNotFoundException, UnsupportedEncodingException {
+        string resourceLocation=xxx.xxx(id);
+        File downloadFile = ResourceUtils.getFile(resourceLocation);
+        return getDownloadHttpHeaders(downloadFile);
+    }
+
+
+    private ResponseEntity getDownloadHttpHeaders(File downloadFile) throws UnsupportedEncodingException {
+        byte[] output = new byte[0];
+        try {
+            output = FileUtils.readFileToByteArray(downloadFile);
+        } catch (IOException e) {
+            EduResearchException.throwException("下载失败！");
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("charset", "utf-8");
+        responseHeaders.setContentType(MediaType.valueOf("text/html"));
+        responseHeaders.setContentLength(output.length);
+        responseHeaders.set("Content-disposition", "attachment; filename=" + URLEncoder.encode(downloadFile.getName(), "UTF-8"));
+        return new ResponseEntity<>(output, responseHeaders, HttpStatus.OK);
+    }
+	
+```
+### 2.前端代码-工具类
+
+```
+/**
+ * 下载文件
+ * @author liuysh
+ * @param action
+ * @param params
+ */
+export function download(action, params, method) {
+  const formElement = document.createElement('form');
+  formElement.style.display = 'display:none;';
+  formElement.method = method;
+  formElement.action = globalConstants.researchRestServiceUrl + action;
+  formElement.target = 'callBackTarget';
+  for (const key in params) {
+    const inputElement = document.createElement('input');
+    inputElement.type = 'hidden';
+    inputElement.name = key;
+    inputElement.value = params[key];
+    formElement.appendChild(inputElement);
+  }
+  document.body.appendChild(formElement);
+  formElement.submit();
+}
+
+
+```
+
+
+### 3.前端代码-调用下载的工具类
+```
+  //数据量比较少的情况
+  handleTemplateDownLoad = () => {
+    download('/sys/users/excel/template/download', { type: 'excel' }, 'get');
+  };
+  
+  
+  //数据量 比较大的情况
+  download('/sys/users/info/excel/download', { idList: ids, type: 'excel' }, 'post');
+  
+  
+```
